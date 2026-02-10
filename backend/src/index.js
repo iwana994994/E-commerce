@@ -20,8 +20,8 @@ const __dirname = path.resolve();
 
 // middleware
 app.use(express.json());
-
-/*app.use(
+/*
+app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
@@ -30,6 +30,9 @@ app.use(express.json());
 // credentials:true meaning?? => server allows a browser to include cookies on request
 
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+
+
+console.log("Client URL:", ENV.CLIENT_URL);
 
 app.use(clerkMiddleware()); // this adds auth field to request object: req.auth()
 

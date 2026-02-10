@@ -5,7 +5,7 @@ const axiosInstance = axios.create({
 baseURL: import.meta.env.VITE_API_URL,
 withCredentials:true
 })
-
+console.log("API URL:", import.meta.env.VITE_API_URL);
 /*
 const axiosInstance = axios.create({
     baseURL: "http://localhost:5000",

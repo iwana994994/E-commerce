@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import { stripe } from "../lib/stripe.js"; 
 import Order from "../models/Order.js";
+import Cart from "../models/Cart.js"
 
 
 export const createOrder = async (req, res) => {
@@ -38,7 +39,7 @@ export const createOrder = async (req, res) => {
           currency: "eur", 
           product_data: {
             name: prod.name,
-            images: prod.image?.startsWith("http") ? [prod.image] : [], // Stripe traži public URL
+            images: prod.image?.startsWith("https") ? [prod.image] : [], // Stripe traži public URL
           },
           unit_amount: unitAmount,
         },

@@ -5,10 +5,11 @@ import { useCart } from "../store/useCart";
 
 const HomePage = () => {
   const { getAllProducts, products } = useProduct();
-  const { addToCart } = useCart();
+  const { addToCart, fetchCart } = useCart();
 
   useEffect(() => {
     getAllProducts();
+    fetchCart()
   }, []);
 
   return (
@@ -43,7 +44,7 @@ const HomePage = () => {
             {/* Dugme van Link-a */}
             <div className="px-2 pb-4">
               <button
-                onClick={() => addToCart(product)}
+                onClick={() => addToCart(product._id)}
                 className="mt-2 w-full rounded-xl bg-accent hover:scale-105 transition text-white font-semibold py-2"
               >
                 Add to cart

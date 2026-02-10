@@ -7,6 +7,9 @@ import './App.css'
 import Navigation from "../../frontend/src/pages/components/Navigation"
 import ProductPage from './pages/ProductPage'
 import CartPage from './pages/CartPage'
+import PurchaseSuccess from './pages/components/PurchaseSuccess'
+import PurchaseCancel from './pages/components/PurchaseCancel'
+import AdminDashboard from './pages/AdminDashboard.jsx'
 
 
 function App() {
@@ -23,6 +26,10 @@ function App() {
    <Route path='/dashboard' element={isSignedIn ? <Dashboard/>: <Navigate to="/"/> }/>
    <Route path="/product/:id" element={<ProductPage/>}/>
    <Route path='/cart' element={isSignedIn ? <CartPage/>:<Navigate to="/"/>}/>
+   <Route path="/purchase-success" element={<PurchaseSuccess />} />
+<Route path="/purchase-cancel" element={<PurchaseCancel />} />
+<Route path="/admin-dashboard" element={<AdminDashboard/>}/>
+
   
   </Routes>
 

@@ -10,7 +10,8 @@ import { inngest, functions } from "./lib/inngest.js";
 
 import CategoryRouter from "./routes/CategoryRouter.js";
 import ProductRouter from "./routes/ProductRouter.js";
-
+import CartRouter from "./routes/CartRouter.js"
+import OrderRouter from "./routes/OrderRouter.js"
 
 
 const app = express();
@@ -20,22 +21,24 @@ const __dirname = path.resolve();
 // middleware
 app.use(express.json());
 
-app.use(
+/*app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
-);
+);*/
 // credentials:true meaning?? => server allows a browser to include cookies on request
-/*
+
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
-*/
+
 app.use(clerkMiddleware()); // this adds auth field to request object: req.auth()
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 app.use("/api/category", CategoryRouter);
 app.use("/api/product", ProductRouter);
+app.use("/api/cart",CartRouter)
+app.use("/api/order",OrderRouter)
 
 
 

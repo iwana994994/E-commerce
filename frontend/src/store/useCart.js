@@ -1,28 +1,42 @@
-import { create } from "zustand";
-
-export const useCart = create((set, get) => ({
+import {create} from "zustand"
+import axiosInstance from "../lib/axios.jsx"
+export const useCart = create((set,get) => ({
   cart: [],
 
-  addToCart: (product) => {
-    const existing = get().cart.find(p => p._id === product._id);
 
-    if (existing) {
-      set({
-        cart: get().cart.map(p =>
-          p._id === product._id
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
-        )
-      });
-    } else {
-      set({
-        cart: [...get().cart, { ...product, quantity: 1 }]
-      });
-    }
+  addToCart: async (productId) => {
+  const { data } = await axiosInstance.post("/api/cart/create", { productId });
+  set({ cart: data.cart });
+},
+
+removeFromCart: async (productId) => {
+  const { data } = await axiosInstance.delete(`/api/cart/remove/${productId}`);
+  set({ cart: data.cart });
+},
+
+fetchCart: async () => {
+  const { data } = await axiosInstance.get("/api/cart/allItems");
+  set({ cart: data.cart });
+},
+checkout: async () => {
+    const cart = get().cart;
+
+    // cart item izgleda: { product: {...}, quantity }
+    const products = cart.map((item) => ({
+      productId: item.product._id,
+      quantity: item.quantity,
+    }));
+
+    const { data } = await axiosInstance.post("/api/order/createOrder", {
+      products,
+    });
+
+    return data; // { id: session.id, totalAmount: ... }
   },
-  removeFromCart: (id) => {
-  set({
-    cart: get().cart.filter(item => item._id !== id)
-  });
+clearCart: async () => {
+  await axiosInstance.delete("/api/cart/clear");
+  set({ cart: [] });
 }
+
+
 }));

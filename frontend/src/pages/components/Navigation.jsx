@@ -4,11 +4,17 @@ import { Link } from "react-router-dom"
 import { useCart } from "../../store/useCart"
 
 
+ {/* import { useUser } from "@clerk/clerk-react */} 
 
 
 
 const Navigation = () => {
   const cart = useCart((s) => s.cart);
+
+{/* 
+const { user } = useUser();
+
+  const isAdmin = user?.publicMetadata?.role === "admin";   */}
 
   // broj svih komada (quantity)
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -25,8 +31,21 @@ const Navigation = () => {
         
 
  {/*RIGHT SIDE */}
+
         </div>
         <div className="flex items-center justify-between gap-6 mr-6">
+
+      {/*    {isAdmin && (    )}    */}   
+          
+            <Link to={"/admin-dashboard"} className="relative inline-block">
+              <div className="flex justify-between items-center rounded-2xl bg-accent p-2 gap-2 hover:transform hover:scale-105 hover:bg-accent-content cursor-pointer">
+                <span className="text-white ">Admin Dashboard</span>
+                <ArrowRightIcon size={18} className="text-white" />
+              </div>
+            </Link>
+          
+    
+
            <Link to={"/cart"} className="relative inline-block">
            
             {totalItems > 0 && (
@@ -50,9 +69,12 @@ const Navigation = () => {
       <SignedIn>
         <UserButton />
       </SignedIn>
+      </div>
       
 </div>
-      </div>
+
+     
+      
     </nav>
   )
 }

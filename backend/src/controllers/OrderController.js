@@ -5,6 +5,9 @@ import Cart from "../models/Cart.js"
 
 
 export const createOrder = async (req, res) => {
+
+
+
   try {
    const { userId } = req.auth();
 
@@ -135,4 +138,115 @@ export const checkoutSuccess = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+export const fetchOrder = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("products.product", "name image") // 👈 ovde
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    console.error("fetchOrder error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getOrderStats = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+
+    const incomeAgg = await Order.aggregate([
+      { $group: { _id: null, totalIncome: { $sum: "$totalAmount" } } },
+    ]);
+    const totalIncome = incomeAgg[0]?.totalIncome || 0;
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const todayOrderIncome = await Order.aggregate([
+      { $match: { createdAt: { $gte: startOfToday } } },
+      { $group: { _id: null, totalIncomeToday: { $sum: "$totalAmount" } } },
+    ]);
+    const totalIncomeToday = todayOrderIncome[0]?.totalIncomeToday || 0;
+
+   const todayOrdersAgg = await Order.aggregate([
+  { $match: { createdAt: { $gte: startOfToday } } },
+  { $count: "todayTotalOrders" }
+]);
+const todayCountOrder = todayOrdersAgg[0]?.todayTotalOrders||0;
+
+
+
+
+
+
+    return res.status(200).json({ totalOrders, totalIncome, totalIncomeToday,todayCountOrder });
+  } catch (error) {
+    console.error("getOrderStats error:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const getOrderChartData = async (req, res) => {
+  try {
+    const start = new Date();
+    start.setMonth(start.getMonth() - 2); 
+    start.setHours(0, 0, 0, 0);
+
+    const ordersPerMonthAgg = await Order.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+    ]);
+
+    const ordersPerMonth = ordersPerMonthAgg.map((item) => ({
+      month: `${item._id.year}-${String(item._id.month).padStart(2, "0")}`,
+      count: item.count,
+    }));
+
+    res.status(200).json({ ordersPerMonth });
+  } catch (error) {
+    console.error("getOrderChartData error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getIncomeLast3Months = async (req, res) => {
+  try {
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 2);
+    threeMonthsAgo.setDate(1);
+    threeMonthsAgo.setHours(0, 0, 0, 0);
+
+    const income = await Order.aggregate([
+      { $match: { createdAt: { $gte: threeMonthsAgo } } },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          totalIncome: { $sum: "$totalAmount" },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+    ]);
+
+    res.status(200).json({ income });
+  } catch (error) {
+    console.error("Income chart error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 

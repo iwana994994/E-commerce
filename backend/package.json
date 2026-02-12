@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "@clerk/express": "^1.7.65",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "inngest": "^3.49.3",
     "install": "^0.13.0",
     "mongoose": "^9.1.5",
+    "multer": "^2.0.2",
     "npm": "^11.8.0",
     "stripe": "^20.3.1"
   },
@@ -19,7 +21,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "seed:products": "node src/seeds/products.js"
+    "seed:products": "node src/seeds/products.js",
+    "seed:orders":"node src/seeds/order.js"
   },
   "type": "module",
   "keywords": [],

@@ -16,49 +16,47 @@ const CreateProduct = ({ categories = [], onClose, onCreated }) => {
     name: "",
     price: "",
     category: "",
-    image: "", // ✅ base64 string koji šaljemo backendu
+    image: "", 
   });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+ const handleImageChange = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewProduct((prev) => ({ ...prev, image: reader.result })); // ✅ data:image/...;base64,...
-    };
-    reader.readAsDataURL(file);
-  };
+  setNewProduct((prev) => ({ ...prev, image: file }));
+};
+
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // basic validacija
-    if (!newProduct.name || !newProduct.price || !newProduct.category || !newProduct.image) {
-      alert("Fill all fields (including image).");
-      return;
-    }
+  if (!newProduct.name || !newProduct.price || !newProduct.category || !newProduct.image) {
+    alert("Fill all fields (including image).");
+    return;
+  }
 
-    setLoading(true);
-    try {
-      await createProduct({
-        name: newProduct.name,
-        price: Number(newProduct.price),
-        category: newProduct.category, // ✅ categoryId
-        image: newProduct.image,       // ✅ base64 string
-      });
+  setLoading(true);
+  try {
+    const form = new FormData();
+    form.append("name", newProduct.name);
+    form.append("price", String(newProduct.price));
+    form.append("category", newProduct.category);
+    form.append("image", newProduct.image); // ✅ File
 
-      // reset form
-      setNewProduct({ name: "", price: "", category: "", image: "" });
+    console.log("is File:", newProduct.image instanceof File);
+console.log("image:", newProduct.image);
 
-      onCreated?.(); // zatvori + refresh lista
-    } catch (err) {
-      console.log("error creating a product", err);
-      alert(err?.response?.data?.error || err.message || "Create failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    await createProduct(form);
+
+    setNewProduct({ name: "", price: "", category: "", image: "" });
+    onCreated?.();
+  } catch (err) {
+    console.log("error creating a product", err);
+    alert(err?.response?.data?.error || err.message || "Create failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -143,14 +141,13 @@ const CreateProduct = ({ categories = [], onClose, onCreated }) => {
             {newProduct.image && <span className="ml-3 text-sm text-gray-400">Image uploaded</span>}
           </div>
 
-          {/* Preview (opciono, ali korisno) */}
-          {newProduct.image && (
-            <img
-              src={newProduct.image}
-              alt="preview"
+         {newProduct.image && (
+           <img
+            src={URL.createObjectURL(newProduct.image)}
+            alt="preview"
               className="w-24 h-24 object-cover rounded-lg border border-gray-600"
-            />
-          )}
+             />
+             )}
 
           <button
             type="submit"

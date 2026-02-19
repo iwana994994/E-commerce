@@ -1,0 +1,13 @@
+import {  Text } from 'react-native'
+import React from 'react'
+import SafeScreen from '@/components/SafeScreen'
+
+const cart = () => {
+  return (
+    <SafeScreen>
+      <Text className="text-white">cart</Text>
+    </SafeScreen>
+  )
+}
+
+export default cart

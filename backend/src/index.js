@@ -29,7 +29,7 @@ app.use(
 );*/
 // credentials:true meaning?? => server allows a browser to include cookies on request
 
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true,  allowedHeaders: ["Content-Type", "Authorization"], }));
 
 
 console.log("Client URL:", ENV.CLIENT_URL);

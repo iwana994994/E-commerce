@@ -40,11 +40,15 @@ editProduct: async (productId, updatedData) => {
     set({ error: error.response?.data?.error || error.message });
   }
 },
-createProduct: async (payload) => {
-  const { data } = await axiosInstance.post("/api/product/create", payload);
+createProduct: async (formData) => {
+  const { data } = await axiosInstance.post("/api/product/create", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
   set((state) => ({ products: [data.product, ...state.products] }));
   return data.product;
 },
+
 
 
 

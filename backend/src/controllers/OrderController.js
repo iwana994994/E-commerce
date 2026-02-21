@@ -9,7 +9,7 @@ export const createOrder = async (req, res) => {
 
 
   try {
-   const { userId } = req.auth.userId;
+   const userId = req.auth.userId;
 
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
 

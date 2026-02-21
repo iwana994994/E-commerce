@@ -9,7 +9,7 @@ export const createOrder = async (req, res) => {
 
 
   try {
-   const { userId } = req.auth();
+   const { userId } = req.auth.userId;
 
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
@@ -143,7 +143,7 @@ export const checkoutSuccess = async (req, res) => {
 export const fetchOrder = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate("products.product", "name image") // 👈 ovde
+      .populate("products.product", "name image") 
       .sort({ createdAt: -1 });
 
     res.status(200).json({ orders });
@@ -251,16 +251,18 @@ export const getIncomeLast3Months = async (req, res) => {
 
 export const fetchOrderForUser = async (req, res) => {
   try {
-    const userId = req.auth.userId; // ✅ iz Clerk tokena
+    const userId = req.auth?.userId; // iz Clerk tokena
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const orders = await Order.find({ user: userId }).populate("items.product");
+    const orders = await Order.find({ userId })
+      .populate("products.product", "name image price category")
+      .sort({ createdAt: -1 });
 
-    res.status(200).json({ orders });
+    return res.status(200).json({ orders });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };

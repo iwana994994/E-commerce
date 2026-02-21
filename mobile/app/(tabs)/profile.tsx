@@ -8,7 +8,7 @@ import { Image } from 'expo-image'
 import { router } from 'expo-router'
 import { ScrollView } from 'react-native'
 
-const profile = () => {
+const Profile = () => {
   const{user} = useUser()
   return (
     <SafeScreen>
@@ -63,4 +63,4 @@ const profile = () => {
   )
 }
 
-export default profile
+export default Profile

@@ -4,15 +4,33 @@ import SafeScreen from '@/app/components/SafeScreen'
 import { useCart } from '@/hooks/useCart'
 import { Image } from 'expo-image'
 import Ionicons from '@expo/vector-icons/Ionicons'
-
+import * as Linking from "expo-linking";
 const Cart = () => {
-  const { fetchCart, carts,removeFromCart } = useCart()
+  const { fetchCart, carts,removeFromCart,checkout } = useCart()
+
 
 
 
   useEffect(() => {
     fetchCart()
   }, [])
+
+  const handleCheckout = async () => {
+    try {
+      const data = await checkout(); // očekujemo { url }
+
+      if (!data?.url) {
+        console.log("Checkout response:", data);
+        alert("Nema Stripe URL. Proveri backend response.");
+        return;
+      }
+
+      await Linking.openURL(data.url); // ✅ mobile-friendly
+    } catch (err) {
+      console.error(err);
+      alert("Checkout failed");
+    }
+  };
 
   return (
    <SafeScreen>
@@ -61,7 +79,10 @@ const Cart = () => {
       </Text>
     </View>
     <View>
-      <TouchableOpacity className="bg-green-600 py-3 rounded-full mt-6">
+      <TouchableOpacity 
+      onPress={()=>{handleCheckout()}}
+      className="bg-green-600 py-3 rounded-full mt-6">
+
         <Text className="text-white text-center font-semibold">Buy Now</Text>
       </TouchableOpacity>
     </View>

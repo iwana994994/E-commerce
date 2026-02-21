@@ -2,6 +2,12 @@ import { create } from "zustand";
 import { api } from "@/lib/axios";
 import { CartLine } from "@/type/CartType";
 
+
+type CheckoutResponse = {
+  url?: string;
+  id?: string;
+  totalAmount?: number;
+};
 type CartStore = {
   carts: CartLine[] | null;
   error: string | null;
@@ -9,6 +15,7 @@ type CartStore = {
   fetchCart: () => Promise<void>;
   addToCart: (productId: string, qty?: number) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
+    checkout: () => Promise<CheckoutResponse>;
  
  
 };
@@ -50,4 +57,16 @@ export const useCart = create<CartStore>((set, get) => ({
       set({ error: e?.response?.data?.error || e.message });
     }
   },
+checkout: async () => {
+  const cart = get().carts;
+  if (!cart || cart.length === 0) return {};
+
+  const products = cart.map((item) => ({
+    productId: item.product._id,
+    quantity: item.quantity,
+  }));
+
+  const { data } = await api.post("/api/order/createOrder", { products });
+  return data;
+},
 }));

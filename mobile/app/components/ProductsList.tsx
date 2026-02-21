@@ -1,24 +1,24 @@
-import { View, Text } from 'react-native'
-import React, { useEffect } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
+
 import SafeScreen from './SafeScreen'
 import { ScrollView } from 'react-native'
-import useProduct from '@/hooks/useProduct'
+
 import { Image } from 'expo-image'
 import { Product } from '@/type/ProductType'
 
+
+import { useCart } from '@/hooks/useCart'
 
 type ProductsListProps = {
   product: Product[];
 };
 
 const ProductsList = ({ product }: ProductsListProps)=> {
-  const{getProducts,products}=useProduct()
-useEffect(()=>{
-  console.log("calling getProducts")
-  getProducts()
- 
-},[])
-  
+
+  const{addToCart}=useCart()
+
+
+
   return (
    <SafeScreen>
    <ScrollView className="flex-1" 
@@ -27,7 +27,7 @@ useEffect(()=>{
      >
     <View className="flex-row flex-wrap items-center justify-between px-4 py-2">
     
-        {products.length > 0 ? (products.map((product)=>(
+        {product.length > 0 ? (product.map((product)=>(
            <View
       key={product._id}
        style={{width:"48%"}}
@@ -40,6 +40,9 @@ useEffect(()=>{
 />
       <Text className="text-white font-semibold">{product.name}</Text>
       <Text className="text-gray-400">{product.price}</Text>
+      <TouchableOpacity onPress={() => {addToCart(product._id)}} className="mt-2 bg-green-500 py-2 rounded-lg">
+        <Text className="text-white text-center">Add to Cart</Text>
+      </TouchableOpacity>
     </View>
 
         ))):(<Text className='text-white'> No products jet...</Text>)}

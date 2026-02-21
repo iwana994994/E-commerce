@@ -1,17 +1,31 @@
 
-import React, { useState,useMemo } from 'react'
-import SafeScreen from '@/components/SafeScreen'
+import React, { useState,useMemo, useEffect } from 'react'
+import SafeScreen from '@/app/components/SafeScreen'
 import { ScrollView, View, Text, TouchableOpacity, TextInput } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Image } from 'react-native'
-import ProductsList from '@/components/ProductsList'
+import ProductsList from '@/app/components/ProductsList'
 import useProduct from '@/hooks/useProduct'
+import { router } from "expo-router";
+
+
 
 const ShopScreen = () => {
   const [search, setSearch] = useState('')
+
   const [selectedCategory, setSelectedCategory] = useState('All')
+
   const Category=[{name:'All',icon:'grid-outline'}, {name:'Cat Birthday Cakes',image:require("../../assets/images/cake.png")}, {name:'Mini Paw Cupcakes',image:require("../../assets/images/cup2.png")}, {name:'Healthy Cat Treats',image:require("../../assets/images/health.png")}]
-const{products}=useProduct()
+  
+  const{products,getProducts}=useProduct()
+
+useEffect(()=>{
+  console.log("calling getProducts")
+  getProducts()
+},[])
+
+console.log("FIRST PRODUCT:", products?.[0]);
+console.log("FIRST CATEGORY:", products?.[0]?.category);
 
  const filteredProducts = useMemo(() => {
   if (!products) return [];
@@ -53,8 +67,8 @@ const{products}=useProduct()
             <Text className="text-gray-500">Find your favorite products</Text>
           </View>
           <View>
-            <TouchableOpacity className="p-2 bg-gray-700 rounded-full">
-            <Ionicons name="options" size={24} color="white"  />
+            <TouchableOpacity onPress={()=>router.push("/(tabs)/cart")} className="p-2 bg-gray-700 rounded-full">
+            <Ionicons name="cart" size={24} color="white"  />
             </TouchableOpacity>
           </View>
         </View>

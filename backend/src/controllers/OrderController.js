@@ -249,4 +249,18 @@ export const getIncomeLast3Months = async (req, res) => {
   }
 };
 
+export const fetchOrderForUser = async (req, res) => {
+  try {
+    const userId = req.auth.userId; // ✅ iz Clerk tokena
 
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const orders = await Order.find({ user: userId }).populate("items.product");
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useProduct } from "../store/useProduct";
 import { Link } from "react-router-dom";
 import { useCart } from "../store/useCart";
+import { useAuth } from "@clerk/clerk-react";
 
 const HomePage = () => {
   const { getAllProducts, products } = useProduct();
   const { addToCart, fetchCart } = useCart();
+  const{isSignedIn}=useAuth()
 
   useEffect(() => {
     getAllProducts();
@@ -44,7 +46,17 @@ const HomePage = () => {
             {/* Dugme van Link-a */}
             <div className="px-2 pb-4">
               <button
-                onClick={() => addToCart(product._id)}
+            
+                onClick={() =>{
+                    if(!isSignedIn){
+                      alert("You must be logged in to add items to cart.")
+                      return;
+                    }
+                  
+                  
+                  addToCart(product._id)
+                }
+                  }
                 className="mt-2 w-full rounded-xl bg-accent hover:scale-105 transition text-white font-semibold py-2"
               >
                 Add to cart

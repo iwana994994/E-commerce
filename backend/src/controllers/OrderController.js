@@ -50,36 +50,22 @@ export const createOrder = async (req, res) => {
       };
     });
 
+    const client = req.body.client; // "mobile" | "web"
+
+     const base = client === "mobile"
+     ? process.env.MOBILE_URL_SCHEME   // npr "catcake://"
+     : process.env.CLIENT_URL;         // npr "https://tvoj-web.com"
+
+   if (!base) return res.status(500).json({ error: "Missing CLIENT_URL or MOBILE_URL_SCHEME" });
+
     
-const client = req.body.client; // "mobile" | "web"
-
-const base =
-  client === "mobile"
-    ? process.env.MOBILE_URL_SCHEME   // "catcake://"
-    : process.env.CLIENT_URL;         // "https://tvoj-web.com"
-
-if (!base) return res.status(500).json({ error: "Missing CLIENT_URL or MOBILE_URL_SCHEME" });
-
-const isWeb = base.startsWith("http");
-
-const normalizedBase = isWeb
-  ? base.replace(/\/+$/, "")          // skini trailing /
-  : base.replace(/\/+$/, "");         // za svaki slučaj skini / na kraju
-
-const success_url = isWeb
-  ? `${normalizedBase}/purchase-success?session_id={CHECKOUT_SESSION_ID}`
-  : `${normalizedBase}purchase-success?session_id={CHECKOUT_SESSION_ID}`; // ✅ bez "/"
-
-const cancel_url = isWeb
-  ? `${normalizedBase}/purchase-cancel`
-  : `${normalizedBase}purchase-cancel`; // ✅ bez "/"
-
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ["card"],
-  line_items: lineItems,
-  mode: "payment",
-  success_url,
-  cancel_url,
+    // 3) Kreiraj session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`|| `${process.env.MOBILE_URL_SCHEME}purchase-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
       metadata: {
         userId,
         products: JSON.stringify(

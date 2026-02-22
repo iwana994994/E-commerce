@@ -50,14 +50,14 @@ export const createOrder = async (req, res) => {
       };
     });
 
-    const base = process.env.MOBILE_URL_SCHEME || process.env.CLIENT_URL;
+    
     // 3) Kreiraj session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
-      mode: "payment", 
-      success_url: `${base}purchase-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${base}purchase-cancel`,
+      mode: "payment",
+      success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
       metadata: {
         userId,
         products: JSON.stringify(

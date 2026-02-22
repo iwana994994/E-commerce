@@ -5,6 +5,7 @@ import { useCart } from '@/hooks/useCart'
 import { Image } from 'expo-image'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as Linking from "expo-linking";
+import { router } from 'expo-router'
 const Cart = () => {
   const { fetchCart, carts,removeFromCart,checkout } = useCart()
 
@@ -80,7 +81,7 @@ const Cart = () => {
     </View>
     <View>
       <TouchableOpacity 
-      onPress={()=>{handleCheckout()}}
+      onPress={()=>{router.push("../components/Checkout")}}
       className="bg-green-600 py-3 rounded-full mt-6">
 
         <Text className="text-white text-center font-semibold">Buy Now</Text>

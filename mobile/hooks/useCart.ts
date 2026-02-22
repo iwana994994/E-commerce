@@ -16,7 +16,7 @@ type CartStore = {
   addToCart: (productId: string, qty?: number) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
     checkout: () => Promise<CheckoutResponse>;
- 
+ clearCart:()=>Promise<void>
  
 };
 
@@ -69,4 +69,11 @@ checkout: async () => {
   const { data } = await api.post("/api/order/createOrder", { products });
   return data;
 },
+clearCart: async () => {
+  await api.delete("/api/cart/clear");
+  set({ carts: [] });
+}
+
+
+
 }));

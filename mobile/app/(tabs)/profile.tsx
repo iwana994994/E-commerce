@@ -7,9 +7,13 @@ import { useUser } from '@clerk/clerk-expo'
 import { Image } from 'expo-image'
 import { router } from 'expo-router'
 import { ScrollView } from 'react-native'
+import { useAuth } from '@clerk/clerk-expo'
 
 const Profile = () => {
   const{user} = useUser()
+
+  const {signOut} = useAuth()
+
   return (
     <SafeScreen>
       <ScrollView>
@@ -29,34 +33,40 @@ const Profile = () => {
 
        <View className="mt-6 flex-row flex-wrap justify-between gap-2 ">
 
-  <TouchableOpacity onPress={()=>router.push("/../components/EditProfile")}
-   style={{ width: "48%" , height: "50%"}} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6' >
+  <TouchableOpacity onPress={()=>router.push("../components/EditProfile")}
+   style={{ width: "48%" , height: "40%"}} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6' >
    <Ionicons name="create" size={24} color="white"  />
    <Text className='text-2xl font-bold text-white'>Edit Profile</Text>
     
   </TouchableOpacity>
 
-  <TouchableOpacity onPress={()=>router.push("/../components/YourOrder")}
-    style={{ width: "48%", height: "50%" }} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
+  <TouchableOpacity onPress={()=>router.push("../components/YourOrder")}
+    style={{ width: "48%", height: "40%" }} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
     <Ionicons name="cart-outline" size={24} color="white"  />
     <Text className='text-2xl font-bold text-white'>Your Order</Text>
     
   </TouchableOpacity>
 
-  <TouchableOpacity onPress={()=>router.push("/../components/WishList")} 
-  style={{ width: "48%", height: "50%" }} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
+  <TouchableOpacity onPress={()=>router.push("../components/WishList")} 
+  style={{ width: "48%", height: "40%" }} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
     <Ionicons name="heart-outline" size={24} color="white"  />
     <Text className='text-2xl font-bold text-white'>WishList</Text>
     
   </TouchableOpacity>
 
-  <TouchableOpacity onPress={()=>router.push("/../components/YourAddress")} 
-  style={{ width: "48%" , height: "50%"}} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
+  <TouchableOpacity onPress={()=>router.push("../components/YourAddress")} 
+  style={{ width: "48%" , height: "40%"}} className='rounded-2xl  bg-slate-600 items-center pt-6 mt-6'>
     <Ionicons name="location-outline" size={24} color="white"  />
     <Text className='text-2xl font-bold text-white'>Your Adress</Text>
 
   </TouchableOpacity>
+
+  <TouchableOpacity onPress={()=>{signOut()}}
+style={{ width: "48%" , height: "25%"}} className='rounded-2xl border-gray-100 bg-slate-600/50 items-center pt-6 mt-6'>
+  <Text className='text-2xl font-bold text-white '>Logout</Text>
+</TouchableOpacity>
 </View>
+
       </View>
       </ScrollView>
     </SafeScreen>

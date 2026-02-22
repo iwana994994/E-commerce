@@ -28,7 +28,7 @@ checkout: async () => {
     }));
 
     const { data } = await axiosInstance.post("/api/order/createOrder", {
-      products,
+      products,client: "web"
     });
 
     return data; // { id: session.id, totalAmount: ... }

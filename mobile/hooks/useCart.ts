@@ -66,7 +66,7 @@ checkout: async () => {
     quantity: item.quantity,
   }));
 
-  const { data } = await api.post("/api/order/createOrder", { products });
+  const { data } = await api.post("/api/order/createOrder", { products,client: "mobile" });
   return data;
 },
 clearCart: async () => {

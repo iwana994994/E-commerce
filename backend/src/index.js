@@ -17,10 +17,10 @@ import OrderRouter from "./routes/OrderRouter.js"
 const app = express();
 
 const __dirname = path.resolve();
-
+/*
 // middleware
 app.use(express.json());
-/*
+
 app.use(
   cors({
     origin: "http://localhost:5173",

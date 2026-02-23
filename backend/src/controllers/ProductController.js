@@ -6,7 +6,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, category } = req.body;
+    const { name, price, category, stock,lowStockThreshold, sale } = req.body;
 
     if (!name || price === undefined || !category || !req.file) {
       return res.status(400).json({ error: "All fields are required (including image)." });
@@ -19,6 +19,19 @@ export const createProduct = async (req, res) => {
     if (Number.isNaN(numericPrice) || numericPrice < 0) {
       return res.status(400).json({ error: "Price must be valid." });
     }
+    const numericStock=stock === undefined || stock === null ? 0 : Number(stock)
+    if(Number.isNaN(numericStock)||numericStock < 0)
+    {
+      return res.status(400).json({error:"Stock must be valid and larger than 0"})
+    }
+   const numericLowStock = lowStockThreshold === undefined 
+   || lowStockThreshold === null
+  ? 2
+  : Number(lowStockThreshold);
+
+if (Number.isNaN(numericLowStock) || numericLowStock < 0) {
+  return res.status(400).json({ error: "lowStockThreshold must be a valid non-negative number" });
+}
 
     const uploadResult = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
@@ -28,11 +41,28 @@ export const createProduct = async (req, res) => {
       stream.end(req.file.buffer);
     });
 
+ // sale normalize (optional)
+    let normalizedSale = { enabled: false, type: "PERCENT", value: 0, startAt: null, endAt: null };
+    if (sale) {
+      const parsedSale = typeof sale === "string" ? JSON.parse(sale) : sale;
+      normalizedSale = {
+        enabled: Boolean(parsedSale.enabled),
+        type: parsedSale.type || "PERCENT",
+        value: parsedSale.value != null ? Number(parsedSale.value) : 0,
+        startAt: parsedSale.startAt ? new Date(parsedSale.startAt) : null,
+        endAt: parsedSale.endAt ? new Date(parsedSale.endAt) : null,
+      };
+    }
+
+
     const product = await Product.create({
       name,
       price: numericPrice,
       image: uploadResult.secure_url,
       category,
+      stock:numericStock,
+      lowStockThreshold:numericLowStock,
+      sale:normalizedSale
     });
 
     const populated = await Product.findById(product._id).populate("category", "name");
@@ -46,7 +76,7 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("category", "name");
+    const products = await Product.find().populate("category", "name").sort({createdAt:-1});
     res.status(201).json({ products });
   } catch (error) {
     res.status(500).json({ error: error.message });

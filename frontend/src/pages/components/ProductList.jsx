@@ -16,6 +16,15 @@ const ProductList = () => {
     price: "",
     image: "",
     category: "",
+    stock: 0,
+  lowStockThreshold: 2,
+  sale: {
+    enabled: false,
+    type: "PERCENT", 
+    value: 0,
+    startAt: "",
+    endAt: "",
+  },
   });
 
   useEffect(() => {
@@ -35,7 +44,16 @@ const ProductList = () => {
       name: product.name,
       price: product.price,
       image: product.image,
-      category: product.category?._id || product.category, // ako je populate ili nije
+      category: product.category?._id || product.category, 
+         stock: product.stock ?? 0,
+    lowStockThreshold: product.lowStockThreshold ?? 2,
+    sale: {
+      enabled: !!product.sale?.enabled,
+      type: product.sale?.type || "PERCENT",
+      value: product.sale?.value ?? 0,
+      startAt: product.sale?.startAt ? product.sale.startAt.slice(0, 10) : "",
+      endAt: product.sale?.endAt ? product.sale.endAt.slice(0, 10) : "",
+    },
     });
     setOpen(true);
   };
@@ -69,6 +87,8 @@ const ProductList = () => {
               <th className="p-4">Name</th>
               <th className="p-4">Price</th>
               <th className="p-4">Category</th>
+              <th className="p-4">On Stock</th>
+              <th className="p-4">Sales</th>
               <th className="p-4">Actions</th>
             </tr>
           </thead>
@@ -87,7 +107,8 @@ const ProductList = () => {
                 <td className="p-4 font-semibold">{product.name}</td>
                 <td className="p-4">{product.price} €</td>
                 <td className="p-4">{product.category?.name}</td>
-
+              <td className="p-4">{product.stock ?? 0}</td>
+               <td className="p-4">{product.sale?.enabled ? "✅ On" : "—"}</td>
                 <td className="p-4">
                   {/* ✅ OVDE implementiraš Edit */}
                   <button
@@ -115,7 +136,7 @@ const ProductList = () => {
 
       {/* ✅ MODAL */}
       {open && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="w-full max-w-lg rounded-2xl bg-zinc-900 p-6 border border-white/10">
             <h2 className="text-xl font-bold mb-4">Edit product</h2>
 
@@ -152,6 +173,86 @@ const ProductList = () => {
         </option>
           ))}
            </select>
+           <div className="mt-4 rounded-xl border border-white/10 p-4 bg-white/5">
+  <div className="flex items-center justify-between">
+    <span className="font-semibold">On Sale</span>
+
+    <button
+      type="button"
+      onClick={() =>
+        setForm((prev) => ({
+          ...prev,
+          sale: { ...prev.sale, enabled: !prev.sale.enabled },
+        }))
+      }
+      className={`w-12 h-7 rounded-full relative transition ${
+        form.sale.enabled ? "bg-green-500" : "bg-gray-600"
+      }`}
+    >
+      <span
+        className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition ${
+          form.sale.enabled ? "translate-x-5" : ""
+        }`}
+      />
+    </button>
+  </div>
+
+  {form.sale.enabled && (
+    <div className="mt-4 space-y-3 ">
+      <select
+        className="w-full rounded-xl p-3 bg-gray-800 border text-gray-200 "
+        value={form.sale.type}
+        onChange={(e) =>
+          setForm((prev) => ({
+            ...prev,
+            sale: { ...prev.sale, type: e.target.value },
+          }))
+        }
+      >
+        <option value="PERCENT">Percent (%)</option>
+      
+      </select>
+
+      <input
+        type="number"
+        className="w-full rounded-xl p-3 bg-white/10 border border-white/10 "
+        value={form.sale.value}
+        onChange={(e) =>
+          setForm((prev) => ({
+            ...prev,
+            sale: { ...prev.sale, value: e.target.value },
+          }))
+        }
+        placeholder="Discount value"
+      />
+
+      <div className="grid grid-cols-2 gap-3">
+        <input
+          type="date"
+          className="w-full rounded-xl p-3 bg-white/10 border border-white/10"
+          value={form.sale.startAt}
+          onChange={(e) =>
+            setForm((prev) => ({
+              ...prev,
+              sale: { ...prev.sale, startAt: e.target.value },
+            }))
+          }
+        />
+        <input
+          type="date"
+          className="w-full rounded-xl p-3 bg-white/10 border border-white/10"
+          value={form.sale.endAt}
+          onChange={(e) =>
+            setForm((prev) => ({
+              ...prev,
+              sale: { ...prev.sale, endAt: e.target.value },
+            }))
+          }
+        />
+      </div>
+    </div>
+  )}
+</div>
 
             </div>
 

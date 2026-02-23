@@ -17,7 +17,23 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
         required: true,
-    }
+    },
+    stock:{
+        type: Number,
+        required: true,
+    },
+    lowStockThreshold: {
+        type: Number,
+        required: true,
+        default: 2,
+    },
+   sale: {
+  enabled: { type: Boolean, default: false },
+  type: { type: String, enum: ["PERCENT", "FIXED"], default: "PERCENT" },
+  value: { type: Number, default: 0, min:0 },
+  startAt: { type: Date, default: null },
+  endAt: { type: Date, default: null },
+}
 
 
 

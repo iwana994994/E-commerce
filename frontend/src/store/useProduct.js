@@ -3,6 +3,10 @@ import axiosInstance from "../lib/axios"
 
 export const useProduct = create((set,get) => ({
     products:[],
+    totalProduct: 0,
+productsOnSale: 0,
+lowStockButNotZero: 0,
+outOfStockTotal: 0,
       error: null,
     getAllProducts: async () => {
         try {
@@ -48,6 +52,20 @@ createProduct: async (formData) => {
   set((state) => ({ products: [data.product, ...state.products] }));
   return data.product;
 },
+getInsights:async()=>{
+  try {
+    const response =  await axiosInstance.get("/api/admin/insights")
+    const totalProduct = response.data.totalProduct
+     const productsOnSale = response.data.productsOnSale
+     const lowStockButNotZero = response.data.lowStockButNotZero
+    const outOfStockTotal = response.data.outOfStockTotal
+
+    set({totalProduct,productsOnSale,lowStockButNotZero,outOfStockTotal})
+    
+  } catch (error) {
+    set({error:error.response?.data?.error})
+  }
+}
 
 
 

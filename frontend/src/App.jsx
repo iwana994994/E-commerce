@@ -15,8 +15,9 @@ import PurchaseCancel from './pages/components/PurchaseCancel'
 import AdminDashboard from './pages/AdminDashboard.jsx'
 import ProductList from './pages/components/ProductList.jsx'
 import OrderList from './pages/components/OrderList.jsx'
-
-
+import InventoryInsights from './pages/components/AdminDashboardComponents/InventoryInsights.jsx'
+import SaleInsights from './pages/components/AdminDashboardComponents/SaleInsights.jsx'
+import ActionNeeded from './pages/components/AdminDashboardComponents/ActionNeeded.jsx'
 
 function App() {
  
@@ -41,6 +42,9 @@ function App() {
 <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
 <Route path="/admin/product-list" element={<ProductList/>}/>
 <Route path="/admin/order-list" element={<OrderList/>}/>
+<Route path='/admin/insights/inventory' element={<InventoryInsights/>}/>
+<Route path='/admin/insights/sales' element={<SaleInsights/>}/>
+<Route path='/admin/insights/actions' element={<ActionNeeded/>}/>
 </Route>
   
   </Routes>

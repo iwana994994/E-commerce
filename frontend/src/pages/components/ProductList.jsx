@@ -8,6 +8,12 @@ const ProductList = () => {
   const { getAllProducts, products, editProduct,deleteProduct } = useProduct();
   const{getAllCategories,categories}=useCategory()
 
+
+{/*FILTER */}
+
+const [filter,setFilter]= useState("ALL")
+
+
   const [open, setOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false); // novo stanje za praćenje kreiranja
   const [form, setForm] = useState({
@@ -32,6 +38,13 @@ const ProductList = () => {
    
     getAllCategories()
   }, []);
+
+{/*filter */}
+const filteredProducts = (products ?? []).filter((p) => {
+  if (filter === "SALE") return p.sale?.enabled;
+  if (filter === "LOW") return (p.stock ?? 0) <= (p.lowStockThreshold ?? 2);
+  return true;
+});
 
   const handleCreateProduct = () => {
     setIsCreating(true);
@@ -74,12 +87,26 @@ const ProductList = () => {
   <div className="flex justify-between items-center mb-6">
     <h1 className="text-2xl font-bold">Products</h1>
 
+
+
     <button onClick={()=>{handleCreateProduct()}} className="px-4 py-2 rounded-xl bg-accent text-white hover:scale-105 transition">
       Create Product
     </button>
+
     </div>
 
       <div className="overflow-x-auto">
+
+<div className="flex-col gap-2 mb-4 ">
+  <div>
+     <p className="font-bold text-sm">Filter for products</p>
+  </div>
+ <div>
+  <button onClick={() => setFilter("ALL")} className={filter==="ALL" ? "btn btn-accent" : "btn btn-ghost"}>All</button>
+  <button onClick={() => setFilter("SALE")} className={filter==="SALE" ? "btn btn-accent" : "btn btn-ghost"}>On sale</button>
+  <button onClick={() => setFilter("LOW")} className={filter==="LOW" ? "btn btn-accent" : "btn btn-ghost"}>Low stock</button>
+  </div>
+</div>
         <table className="min-w-full rounded-xl overflow-hidden">
           <thead className="text-left">
             <tr>
@@ -94,7 +121,7 @@ const ProductList = () => {
           </thead>
 
           <tbody>
-            {products && products.length > 0 ? (products.map((product) => (
+            {products && products.length > 0 ? (filteredProducts.map((product) => (
               <tr key={product._id} className="border-t">
                 <td className="p-4">
                   <img

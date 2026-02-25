@@ -5,6 +5,29 @@ import Cart from "../models/Cart.js"
 import axios from "axios";
 
 
+
+const sendOrderConfirmationToN8N = async ({ orderId, email, totalAmount, items }) => {
+  if (!process.env.N8N_ORDER_CONFIRM_WEBHOOK) return;
+  if (!email) return;
+
+  try {
+    await axios.post(process.env.N8N_ORDER_CONFIRM_WEBHOOK, {
+      orderId,
+      email,
+      totalAmount,
+      items,
+      time: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error("Order confirmation webhook failed:", err?.response?.data || err.message);
+    // namerno ne bacamo error da ne srušimo checkout
+  }
+};
+
+
+
+
+
 export const createOrder = async (req, res) => {
 
 
@@ -135,6 +158,42 @@ export const checkoutSuccess = async (req, res) => {
     });
 
     await newOrder.save();
+
+
+
+// ✅ CUSTOMER EMAIL automation
+const customerEmail =
+  session.customer_details?.email ||
+  session.customer_email ||
+  null;
+
+const itemsForEmail = orderProducts.map((it) => {
+  const prod = mapById.get(it.product.toString());
+  return {
+    productId: it.product,
+    name: prod?.name || "Product",
+    quantity: it.quantity,
+    price: it.price,
+  };
+});
+
+// čuvaj email u orderu
+newOrder.customerEmail = customerEmail;
+await newOrder.save();
+
+// ne šalji više puta (ako ikad bude retry)
+if (!newOrder.customerEmailSentAt && customerEmail) {
+  await sendOrderConfirmationToN8N({
+    userId: userId,
+    orderId: newOrder._id,
+    email: customerEmail,
+    totalAmount: newOrder.totalAmount,
+    items: itemsForEmail,
+  });
+
+  newOrder.customerEmailSentAt = new Date();
+  await newOrder.save();
+}
 
    // ✅ 1) smanji stock i okini alert po potrebi
 for (const item of orderProducts) {

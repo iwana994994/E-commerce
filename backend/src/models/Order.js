@@ -33,6 +33,8 @@ const orderSchema = new mongoose.Schema(
 			type: String,
 			unique: true,
 		},
+		customerEmail: { type: String, default: null },
+        customerEmailSentAt: { type: Date, default: null },
 	},
 	{ timestamps: true }
 );

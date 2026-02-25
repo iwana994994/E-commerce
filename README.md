@@ -1,10 +1,41 @@
-# E-commerce
-<img width="1920" height="797" alt="Screenshot (299)" src="https://github.com/user-attachments/assets/ab192d96-f4a0-4b4a-bcb8-ddee585c19f4" />
-<img width="1920" height="795" alt="Screenshot (301)" src="https://github.com/user-attachments/assets/24937a8d-f618-4260-ae2a-7d9526e946b7" />
-<img width="1920" height="841" alt="Screenshot (288)" src="https://github.com/user-attachments/assets/0454cda5-02cd-4812-b336-2c73ad9f579a" />
-<img width="1920" height="822" alt="Screenshot (287)" src="https://github.com/user-attachments/assets/1315c422-0831-4ffa-8eec-1880b6c189be" />
-<img width="1920" height="775" alt="Screenshot (291)" src="https://github.com/user-attachments/assets/68978e29-9b1a-44a7-9c09-acb7380fc286" />
-<img width="1920" height="823" alt="Screenshot (290)" src="https://github.com/user-attachments/assets/bcbb20d8-effd-4bad-8dad-1ccf2cf1768e" />
-<img width="1920" height="804" alt="Screenshot (295)" src="https://github.com/user-attachments/assets/9a24d5cc-39d5-4fd4-adda-53de5dca7d00" />
-<img width="1920" height="804" alt="Screenshot (293)" src="https://github.com/user-attachments/assets/6c937859-1613-4d54-8158-e335f4be1d25" />
-<img width="1920" height="815" alt="Screenshot (292)" src="https://github.com/user-attachments/assets/80a01148-82fa-4e64-84b8-b44950b9b171" />
+## 🚨 Inventory Automation (Low Stock Alerts) — n8n + Gmail
+
+When an order is successfully paid via Stripe, the backend:
+1) Saves the order
+2) Decreases product stock atomically (`$inc`)
+3) If stock falls to/below the configured `lowStockThreshold`, it triggers an automation workflow (n8n webhook)
+4) n8n sends an email notification to the admin (Gmail node)
+
+### Why this is cool (for real-world apps)
+- Prevents overselling (stock never goes negative)
+- Alerts the admin automatically when inventory is low
+- Demonstrates real automation integration (not just CRUD)
+
+---
+
+### 🛒 1) Real checkout → order created
+<img width="1887" height="711" alt="Screenshot (303)" src="https://github.com/user-attachments/assets/c47db1fb-e61b-4d84-baa4-ac99aa258f2d" />
+<img width="1920" height="696" alt="Screenshot (304)" src="https://github.com/user-attachments/assets/aafe7a05-bae8-48bd-9275-895eb8ab9d1f" />
+
+---
+
+### 📦 2) Low stock threshold logic
+Example: Stock = 2, Low Stock Threshold = 1  
+When a purchase reduces stock to 1, the automation is triggered.
+
+<img width="1920" height="811" alt="Screenshot (307)" src="https://github.com/user-attachments/assets/10916609-8537-4393-9ca3-199cd58a9998" />
+
+
+---
+
+### 🤖 3) n8n workflow (Webhook → Gmail)
+The backend sends data to n8n via webhook:
+`productId, name, stock, lowStockThreshold, time`
+
+<img width="753" height="539" alt="Screenshot (305)" src="https://github.com/user-attachments/assets/3d75ab1a-bfcd-4bef-8ea6-e713fd4587c1" />
+
+
+---
+
+### ✉️ 4) Admin email alert received
+<img width="786" height="289" alt="Screenshot (306)" src="https://github.com/user-attachments/assets/ee820838-26f1-4bcf-a86d-490032768a76" />

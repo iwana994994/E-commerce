@@ -2,16 +2,9 @@
 
 When an order is successfully paid via Stripe, the backend:
 1) Saves the order
-2) Decreases product stock atomically (`$inc`)
-3) If stock falls to/below the configured `lowStockThreshold`, it triggers an automation workflow (n8n webhook)
-4) n8n sends an email notification to the admin (Gmail node)
-
-### Why this is cool (for real-world apps)
-- Prevents overselling (stock never goes negative)
-- Alerts the admin automatically when inventory is low
-- Demonstrates real automation integration (not just CRUD)
-
----
+2) Decreases product stock atomically 
+3) If stock falls to/below the configured, it triggers an automation workflow
+4) n8n sends an email notification to the admin 
 
 ### 🛒 1) Real checkout → order created
 <img width="1887" height="711" alt="Screenshot (303)" src="https://github.com/user-attachments/assets/c47db1fb-e61b-4d84-baa4-ac99aa258f2d" />

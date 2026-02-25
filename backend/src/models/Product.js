@@ -33,7 +33,8 @@ const productSchema = new mongoose.Schema({
   value: { type: Number, default: 0, min:0 },
   startAt: { type: Date, default: null },
   endAt: { type: Date, default: null },
-}
+},
+lastLowStockAlertAt: { type: Date, default: null },
 
 
 

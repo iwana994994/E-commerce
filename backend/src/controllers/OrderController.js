@@ -2,6 +2,7 @@ import Product from "../models/Product.js";
 import { stripe } from "../lib/stripe.js"; 
 import Order from "../models/Order.js";
 import Cart from "../models/Cart.js"
+import axios from "axios";
 
 
 export const createOrder = async (req, res) => {
@@ -134,6 +135,46 @@ export const checkoutSuccess = async (req, res) => {
     });
 
     await newOrder.save();
+
+   // ✅ 1) smanji stock i okini alert po potrebi
+for (const item of orderProducts) {
+  const updated = await Product.findOneAndUpdate(
+    { _id: item.product, stock: { $gte: item.quantity } },
+    { $inc: { stock: -item.quantity } },
+    { new: true }
+  );
+
+  if (!updated) {
+    throw new Error("Not enough stock for one of the products.");
+  }
+
+  // ✅ 2) low stock + throttling (12h)
+  const isLow = updated.stock <= updated.lowStockThreshold;
+  const last = updated.lastLowStockAlertAt
+    ? new Date(updated.lastLowStockAlertAt).getTime()
+    : 0;
+
+  const twelveHours = 12 * 60 * 60 * 1000;
+  const shouldSend = !last || Date.now() - last > twelveHours;
+
+  if (isLow && shouldSend && process.env.N8N_LOW_STOCK_WEBHOOK) {
+
+    console.log("Sending low stock webhook for:", updated.name, updated.stock);
+
+    await axios.post(process.env.N8N_LOW_STOCK_WEBHOOK, {
+      productId: updated._id,
+      name: updated.name,
+      stock: updated.stock,
+      lowStockThreshold: updated.lowStockThreshold,
+      time: new Date().toISOString(),
+    });
+
+    await Product.updateOne(
+      { _id: updated._id },
+      { $set: { lastLowStockAlertAt: new Date() } }
+    );
+  }
+}
 
     await Cart.findOneAndDelete({ userId: session.metadata.userId });
 
@@ -275,3 +316,69 @@ export const fetchOrderForUser = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+//FOR THIS MONTHS BEST 
+export const top5Products = async (req, res) => {
+  try {
+    const start = new Date();
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + 1);
+
+    const top5 = await Order.aggregate([
+      { $match: { createdAt: { $gte: start, $lt: end } } },
+      { $unwind: "$products" },
+      { $match: { "products.product": { $ne: null } } },
+
+      {
+        $group: {
+          _id: "$products.product",
+          totalQuantity: { $sum: "$products.quantity" },
+        },
+      },
+
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 5 },
+
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+
+      { $unwind: "$product" },
+
+      {
+        $project: {
+          _id: 0,
+          productId: "$product._id",
+          name: "$product.name",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({ top5 });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+//FOR THIS MONTHS WORST
+export const top5WorstProducts= async(req,res)=>{
+try {
+  
+} catch (error) {
+
+  res.status(500).json({error:error.message})
+  
+}
+
+
+}

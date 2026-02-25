@@ -7,6 +7,7 @@ export const useProduct = create((set,get) => ({
 productsOnSale: 0,
 lowStockButNotZero: 0,
 outOfStockTotal: 0,
+top5:[],
       error: null,
     getAllProducts: async () => {
         try {
@@ -65,7 +66,17 @@ getInsights:async()=>{
   } catch (error) {
     set({error:error.response?.data?.error})
   }
+},
+top5Products:async()=>{
+  try {
+    const response= await axiosInstance.get("/api/order/top5BestProducts")
+    set({top5:response.data.top5})
+    
+  } catch (error) {
+    set({error:error.response.data?.error})
+  }
 }
+
 
 
 

@@ -1,3 +1,15 @@
+### Shop Page
+<img width="1920" height="823" alt="Screenshot (353)" src="https://github.com/user-attachments/assets/7aab6afc-2b75-41ac-b11d-3e84b9ac6dbe" />
+
+### Admin Dashboard
+
+<img width="1920" height="816" alt="Screenshot (355)" src="https://github.com/user-attachments/assets/19cf4918-cee0-48f3-a740-005ce452dee5" />
+
+### Admin Products Management
+
+<img width="1920" height="811" alt="Screenshot (356)" src="https://github.com/user-attachments/assets/1ffcdccb-3db6-4b36-b7f0-0f842b0fcfd6" />
+
+
 ## 🚨 Inventory Automation (Low Stock Alerts) — n8n + Gmail
 
 When an order is successfully paid via Stripe, the backend:

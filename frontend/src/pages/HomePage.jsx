@@ -3,6 +3,10 @@ import { useProduct } from "../store/useProduct";
 import { Link } from "react-router-dom";
 import { useCart } from "../store/useCart";
 import { useAuth } from "@clerk/clerk-react";
+import SearchSort from "../pages/components/Search-Sort";
+
+import ProductFilters from "../pages/components/ProductFilters";
+
 
 const HomePage = () => {
   const { getAllProducts, products } = useProduct();
@@ -15,6 +19,19 @@ const HomePage = () => {
   }, []);
 
   return (
+    <>
+    <div className="flex justify-between px-4 py-6 mt-2">
+      <div>
+        <h1 className="text-2xl font-bold">All Products</h1>
+      </div>
+      <div>
+       <SearchSort/>
+      </div>
+    </div>
+    <div className="flex justify-between">
+      <div className="px-4 py-6 min-w-auto">
+        <ProductFilters/>
+      </div>
     <div className="px-4 py-6">
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((product) => (
@@ -66,6 +83,8 @@ const HomePage = () => {
         ))}
       </div>
     </div>
+    </div>
+    </>
   );
 };
 

@@ -9,9 +9,30 @@ lowStockButNotZero: 0,
 outOfStockTotal: 0,
 top5:[],
       error: null,
-    getAllProducts: async () => {
+    getAllProducts: async (filters = {}) => {
         try {
-        const { data } = await axiosInstance.get("/api/product/getAll");
+ const params = new URLSearchParams();
+
+
+      if (filters.search) {
+        params.append("search", filters.search);
+      }
+      if (filters.category) {
+        params.append("category", filters.category);
+      }
+     if (filters.minPrice) {
+  params.append("minPrice", filters.minPrice);
+}
+
+if (filters.maxPrice) {
+  params.append("maxPrice", filters.maxPrice);
+}
+if(filters.sort){
+  params.append("sort", filters.sort);
+}
+
+
+        const { data } = await axiosInstance.get(`/api/product/getAll?${params.toString()}`);
          set({ products: data.products });
         } catch (error) {
             set({ error: error.response?.data?.error || error.message });

@@ -76,7 +76,38 @@ if (Number.isNaN(numericLowStock) || numericLowStock < 0) {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("category", "name").sort({createdAt:-1});
+    const { search, category,minPrice,maxPrice } = req.query;
+    let filter = {};
+    if (search) {
+      filter.name = { $regex: search, $options: "i" }; 
+    }
+    if (category) {
+      filter.category = category;
+    }
+    if (minPrice || maxPrice) {
+       filter.price = {};
+
+  if (minPrice) {
+    filter.price.$gte = Number(minPrice);
+  }
+
+  if (maxPrice) {
+    filter.price.$lte = Number(maxPrice);
+  }
+}
+ let sortOption = req.query.sort;
+
+  if (sortOption) {
+    if (sortOption === "asc") {
+      filter.price = 1;
+    } else if (sortOption === "desc") {
+      filter.price = -1;
+    }
+  }
+  
+
+   
+    const products = await Product.find(filter).sort(sortOption).populate("category", "name");
     res.status(201).json({ products });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -21,17 +21,17 @@ const __dirname = path.resolve();
 
 // middleware
 app.use(express.json());
-/*
+
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
-);*/
+);
 // credentials:true meaning?? => server allows a browser to include cookies on request
-
+/*
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true,  allowedHeaders: ["Content-Type", "Authorization"], }));
-
+*/
 
 console.log("Client URL:", ENV.CLIENT_URL);
 

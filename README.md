@@ -17,6 +17,25 @@ Full-stack e-commerce application built with the MERN stack.
 
 https://e-commerce-53zu.onrender.com
 
+## 🚀 Features
+
+Customer Store
+- product catalog
+- search and category filtering
+- price range filtering
+- add to cart
+
+Admin Dashboard
+- product management (CRUD)
+- category management
+- order management
+- sales analytics
+
+Analytics
+- orders per month chart
+- income insights
+- sales overview
+
 
 # Shop Page
 <img width="1920" height="823" alt="Screenshot (353)" src="https://github.com/user-attachments/assets/7aab6afc-2b75-41ac-b11d-3e84b9ac6dbe" />
@@ -65,6 +84,16 @@ The backend sends data to n8n via webhook:
 ### ✉️ 4) Admin email alert received
 <img width="786" height="289" alt="Screenshot (306)" src="https://github.com/user-attachments/assets/ee820838-26f1-4bcf-a86d-490032768a76" />
 
+## 🏗 Architecture
+
+Frontend:
+React + Vite
+
+Backend:
+Node.js + Express REST API
+
+Database:
+MongoDB with Mongoose
 
 # Project Roadmap
 

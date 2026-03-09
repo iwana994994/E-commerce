@@ -1,4 +1,15 @@
-# Cat Cake E-Commerce
+## Tech Stack
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react)
+![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs)
+
+# 🐱 Cat Cake E-Commerce
 
 Full-stack e-commerce application built with the MERN stack.
 
@@ -7,14 +18,14 @@ Full-stack e-commerce application built with the MERN stack.
 https://e-commerce-53zu.onrender.com
 
 
-### Shop Page
+# Shop Page
 <img width="1920" height="823" alt="Screenshot (353)" src="https://github.com/user-attachments/assets/7aab6afc-2b75-41ac-b11d-3e84b9ac6dbe" />
 
-### Admin Dashboard
+# 🖥️ Admin Dashboard
 
 <img width="1920" height="816" alt="Screenshot (355)" src="https://github.com/user-attachments/assets/19cf4918-cee0-48f3-a740-005ce452dee5" />
 
-### Admin Products Management
+## 📊  Admin Products Management
 
 <img width="1920" height="811" alt="Screenshot (356)" src="https://github.com/user-attachments/assets/1ffcdccb-3db6-4b36-b7f0-0f842b0fcfd6" />
 
@@ -53,3 +64,13 @@ The backend sends data to n8n via webhook:
 
 ### ✉️ 4) Admin email alert received
 <img width="786" height="289" alt="Screenshot (306)" src="https://github.com/user-attachments/assets/ee820838-26f1-4bcf-a86d-490032768a76" />
+
+
+# Project Roadmap
+
+The next phase of this project includes:
+
+-  ⚡☁️  deploying the application to AWS
+-  🐳 improving deployment workflow with Docker
+-  🤖🐍 integrating Python AI libraries for advanced analytics
+- expanding the admin dashboard with intelligent insights and predictive features

@@ -1,3 +1,12 @@
+# Cat Cake E-Commerce
+
+Full-stack e-commerce application built with the MERN stack.
+
+## Live Demo
+
+https://e-commerce-53zu.onrender.com
+
+
 ### Shop Page
 <img width="1920" height="823" alt="Screenshot (353)" src="https://github.com/user-attachments/assets/7aab6afc-2b75-41ac-b11d-3e84b9ac6dbe" />
 

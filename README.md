@@ -13,7 +13,7 @@
 
 Full-stack e-commerce application built with the MERN stack.
 
-## Live Demo
+## 🌐 Live Demo
 
 https://e-commerce-53zu.onrender.com
 
